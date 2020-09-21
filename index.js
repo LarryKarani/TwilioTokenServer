@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const pino = require('express-pino-logger')();
 const { chatToken, videoToken } = require('./tokens');
-
+const port = process.env.PORT || 3000;
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,6 +23,13 @@ app.get('/api/greeting', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
 });
+
+app.get('/', (req, res) => {
+  const name = req.query.name || 'World';
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
+});
+
 
 app.get('/chat/token', (req, res) => {
   const identity = req.query.identity;
@@ -50,6 +57,6 @@ app.post('/video/token', (req, res) => {
   sendTokenResponse(token, res);
 });
 
-app.listen(3001, () =>
+app.listen(port, () =>
   console.log('Express server is running on localhost:3001')
 );
